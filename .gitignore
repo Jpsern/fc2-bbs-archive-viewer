@@ -1,0 +1,7 @@
+node_modules
+dist
+public/data/threads.json
+input/*.txt
+.env
+.DS_Store
+
