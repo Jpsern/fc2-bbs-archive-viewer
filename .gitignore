@@ -25,3 +25,6 @@ dist-ssr
 
 # Input data
 input/*.txt
+
+# Generated data
+public/data/threads.json

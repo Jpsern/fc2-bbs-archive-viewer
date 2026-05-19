@@ -1,11 +1,54 @@
+import { useEffect, useState } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { ErrorState } from './components/ErrorState'
+import { LoadingState } from './components/LoadingState'
+import { ThreadDetailPage } from './features/thread-detail/ThreadDetailPage'
+import { ThreadListPage } from './features/thread-list/ThreadListPage'
+import { loadThreads } from './lib/loadThreads'
+import type { Thread } from './types/domain'
+
 function App() {
+  const [threads, setThreads] = useState<Thread[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    loadThreads()
+      .then((data) => {
+        setThreads(data)
+        setError(null)
+      })
+      .catch((err: unknown) => {
+        const message = err instanceof Error ? err.message : 'データ読み込みに失敗しました'
+        setError(message)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [])
+
+  if (loading) {
+    return (
+      <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
+        <LoadingState />
+      </main>
+    )
+  }
+
+  if (error) {
+    return (
+      <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
+        <ErrorState message={error} />
+      </main>
+    )
+  }
+
   return (
-    <main className="mx-auto min-h-screen max-w-3xl px-6 py-16">
-      <h1 className="text-2xl font-bold">FC2掲示板アーカイブビューア</h1>
-      <p className="mt-4 text-slate-600">
-        フェーズ1: 初期プロジェクト構築完了。パーサーと画面機能は未実装です。
-      </p>
-    </main>
+    <Routes>
+      <Route path="/" element={<ThreadListPage threads={threads} />} />
+      <Route path="/threads/:threadId" element={<ThreadDetailPage threads={threads} />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
 
