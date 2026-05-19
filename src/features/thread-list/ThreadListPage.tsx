@@ -25,46 +25,74 @@ const formatDate = (value: string): string => {
   return date.toLocaleString('ja-JP')
 }
 
+const toSearchableText = (thread: Thread): string => {
+  const fields = [thread.title, thread.author, ...thread.posts.map((post) => `${post.subject} ${post.author} ${post.body}`)]
+  return fields.join(' ').toLocaleLowerCase()
+}
+
 export function ThreadListPage({ threads }: ThreadListPageProps) {
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
+  const [query, setQuery] = useState('')
 
-  const sortedThreads = useMemo(() => {
-    const cloned = [...threads]
+  const filteredAndSortedThreads = useMemo(() => {
+    const normalizedQuery = query.trim().toLocaleLowerCase()
+
+    const filtered = normalizedQuery
+      ? threads.filter((thread) => toSearchableText(thread).includes(normalizedQuery))
+      : threads
+
+    const cloned = [...filtered]
     cloned.sort((a, b) => {
       const diff = toTimestamp(a.updatedAt) - toTimestamp(b.updatedAt)
       return sortOrder === 'desc' ? -diff : diff
     })
     return cloned
-  }, [threads, sortOrder])
+  }, [threads, sortOrder, query])
 
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
-      <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">FC2掲示板アーカイブビューア</h1>
-          <p className="mt-1 text-sm text-slate-600">スレッド数: {sortedThreads.length}</p>
+      <header className="mb-6 space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold">FC2掲示板アーカイブビューア</h1>
+            <p className="mt-1 text-sm text-slate-600">表示件数: {filteredAndSortedThreads.length}</p>
+          </div>
+
+          <label className="text-sm font-medium text-slate-700">
+            日付ソート
+            <select
+              className="ml-2 rounded border border-slate-300 bg-white px-2 py-1"
+              value={sortOrder}
+              onChange={(event) => setSortOrder(event.target.value as SortOrder)}
+            >
+              <option value="desc">新しい順</option>
+              <option value="asc">古い順</option>
+            </select>
+          </label>
         </div>
 
-        <label className="text-sm font-medium text-slate-700">
-          日付ソート
-          <select
-            className="ml-2 rounded border border-slate-300 bg-white px-2 py-1"
-            value={sortOrder}
-            onChange={(event) => setSortOrder(event.target.value as SortOrder)}
-          >
-            <option value="desc">新しい順</option>
-            <option value="asc">古い順</option>
-          </select>
-        </label>
+        <div>
+          <label htmlFor="thread-search" className="mb-1 block text-sm font-medium text-slate-700">
+            キーワード検索（件名・投稿者・本文）
+          </label>
+          <input
+            id="thread-search"
+            type="text"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="例: Alice, バグ報告"
+            className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
+          />
+        </div>
       </header>
 
-      {sortedThreads.length === 0 ? (
+      {filteredAndSortedThreads.length === 0 ? (
         <p className="rounded border border-slate-200 bg-slate-50 p-4 text-slate-600">
-          スレッドがありません。`npm run convert` を実行してデータを生成してください。
+          該当スレッドがありません。検索条件を確認してください。
         </p>
       ) : (
         <ul className="space-y-4">
-          {sortedThreads.map((thread) => (
+          {filteredAndSortedThreads.map((thread) => (
             <li key={thread.id} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
