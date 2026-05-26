@@ -30,6 +30,14 @@ const formatDate = (value: string): string => {
   return date.toLocaleString('ja-JP')
 }
 
+const toMonthKey = (value: string): string => {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  return `${year}-${month}`
+}
+
 const getFieldText = (thread: Thread, field: SearchField): string => {
   switch (field) {
     case 'subject':
@@ -59,20 +67,31 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
   const [query, setQuery] = useState('')
   const [matchMode, setMatchMode] = useState<MatchMode>('any')
   const [fields, setFields] = useState<SearchFieldState>({ subject: true, author: true, body: true })
+  const [monthFilter, setMonthFilter] = useState('')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(20)
 
+  const monthOptions = useMemo(() => {
+    const unique = new Set<string>()
+    for (const thread of threads) {
+      const key = toMonthKey(thread.updatedAt)
+      if (key) unique.add(key)
+    }
+    return [...unique].sort((a, b) => (a < b ? 1 : -1))
+  }, [threads])
+
   const filteredAndSortedThreads = useMemo(() => {
     const terms = splitTerms(query)
+    const byMonth = monthFilter ? threads.filter((thread) => toMonthKey(thread.updatedAt) === monthFilter) : threads
 
     const filtered = terms.length
-      ? threads.filter((thread) => {
+      ? byMonth.filter((thread) => {
           if (matchMode === 'all') {
             return terms.every((term) => includesTerm(thread, term, fields))
           }
           return terms.some((term) => includesTerm(thread, term, fields))
         })
-      : threads
+      : byMonth
 
     const cloned = [...filtered]
     cloned.sort((a, b) => {
@@ -80,7 +99,7 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
       return sortOrder === 'desc' ? -diff : diff
     })
     return cloned
-  }, [threads, sortOrder, query, matchMode, fields])
+  }, [threads, sortOrder, query, matchMode, fields, monthFilter])
 
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedThreads.length / pageSize))
   const currentPage = Math.min(page, totalPages)
@@ -109,6 +128,25 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
               >
                 <option value="desc">新しい順</option>
                 <option value="asc">古い順</option>
+              </select>
+            </label>
+
+            <label className="text-sm font-medium text-slate-700">
+              月フィルタ
+              <select
+                className="ml-2 rounded border border-slate-300 bg-white px-2 py-1"
+                value={monthFilter}
+                onChange={(event) => {
+                  setMonthFilter(event.target.value)
+                  setPage(1)
+                }}
+              >
+                <option value="">すべて</option>
+                {monthOptions.map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
               </select>
             </label>
 
