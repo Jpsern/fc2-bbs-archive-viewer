@@ -38,6 +38,12 @@ const toMonthKey = (value: string): string => {
   return `${year}-${month}`
 }
 
+const toMonthLabel = (monthKey: string): string => {
+  const [year, month] = monthKey.split('-')
+  if (!year || !month) return monthKey
+  return `${year}年${month}月`
+}
+
 const getFieldText = (thread: Thread, field: SearchField): string => {
   switch (field) {
     case 'subject':
@@ -74,7 +80,7 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
   const monthOptions = useMemo(() => {
     const unique = new Set<string>()
     for (const thread of threads) {
-      const key = toMonthKey(thread.updatedAt)
+      const key = toMonthKey(thread.createdAt)
       if (key) unique.add(key)
     }
     return [...unique].sort((a, b) => (a < b ? 1 : -1))
@@ -82,7 +88,7 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
 
   const filteredAndSortedThreads = useMemo(() => {
     const terms = splitTerms(query)
-    const byMonth = monthFilter ? threads.filter((thread) => toMonthKey(thread.updatedAt) === monthFilter) : threads
+    const byMonth = monthFilter ? threads.filter((thread) => toMonthKey(thread.createdAt) === monthFilter) : threads
 
     const filtered = terms.length
       ? byMonth.filter((thread) => {
@@ -144,7 +150,7 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
                 <option value="">すべて</option>
                 {monthOptions.map((month) => (
                   <option key={month} value={month}>
-                    {month}
+                    {toMonthLabel(month)}
                   </option>
                 ))}
               </select>
