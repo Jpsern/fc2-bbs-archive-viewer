@@ -59,7 +59,7 @@ export function ThreadDetailPage({ threads }: ThreadDetailPageProps) {
 
               <button
                 type="button"
-                className="mt-3 rounded-md bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-200 hover:bg-slate-700"
+                className="mt-3 rounded-md bg-slate-700 px-2.5 py-1 text-xs font-medium text-slate-100 hover:bg-slate-600"
                 onClick={() => {
                   setShowMetaByPostId((prev) => ({ ...prev, [post.id]: !showMeta }))
                 }}
@@ -68,7 +68,7 @@ export function ThreadDetailPage({ threads }: ThreadDetailPageProps) {
               </button>
 
               {showMeta ? (
-                <dl className="mt-3 grid gap-2 rounded-xl border border-[var(--line)] bg-slate-900/70 p-3 text-xs text-slate-300 sm:grid-cols-2">
+                <dl className="mt-3 grid gap-2 rounded-xl border border-[var(--line)]  bg-slate-800/70 p-3 text-xs text-slate-300 sm:grid-cols-2">
                   <div><dt className="font-semibold">EMAIL</dt><dd>{post.email || '-'}</dd></div>
                   <div><dt className="font-semibold">SITE</dt><dd>{post.site || '-'}</dd></div>
                   <div><dt className="font-semibold">USER AGENT</dt><dd>{post.userAgent || '-'}</dd></div>
