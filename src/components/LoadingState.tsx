@@ -1,3 +1,7 @@
 export function LoadingState() {
-  return <p className="text-slate-600">読み込み中...</p>
+  return (
+    <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)]/90 p-8 text-center shadow-sm">
+      <p className="text-sm text-[var(--muted)]">データを読み込み中です...</p>
+    </div>
+  )
 }
