@@ -124,21 +124,21 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
           <div className="flex flex-wrap items-center gap-3">
             <label className="text-sm font-medium text-[var(--muted)]">
               日付ソート
-              <select className="ml-2 rounded-lg border border-[var(--line)] bg-white px-2 py-1.5" value={sortOrder} onChange={(event) => { setSortOrder(event.target.value as SortOrder); setPage(1) }}>
+              <select className="ml-2 rounded-lg border border-[var(--line)] bg-slate-900 px-2 py-1.5 text-[var(--text)]" value={sortOrder} onChange={(event) => { setSortOrder(event.target.value as SortOrder); setPage(1) }}>
                 <option value="desc">新しい順</option>
                 <option value="asc">古い順</option>
               </select>
             </label>
             <label className="text-sm font-medium text-[var(--muted)]">
               月
-              <select className="ml-2 rounded-lg border border-[var(--line)] bg-white px-2 py-1.5" value={monthFilter} onChange={(event) => { setMonthFilter(event.target.value); setPage(1) }}>
+              <select className="ml-2 rounded-lg border border-[var(--line)] bg-slate-900 px-2 py-1.5 text-[var(--text)]" value={monthFilter} onChange={(event) => { setMonthFilter(event.target.value); setPage(1) }}>
                 <option value="">すべて</option>
                 {monthOptions.map((month) => <option key={month} value={month}>{toMonthLabel(month)}</option>)}
               </select>
             </label>
             <label className="text-sm font-medium text-[var(--muted)]">
               件数
-              <select className="ml-2 rounded-lg border border-[var(--line)] bg-white px-2 py-1.5" value={pageSize} onChange={(event) => { setPageSize(Number(event.target.value)); setPage(1) }}>
+              <select className="ml-2 rounded-lg border border-[var(--line)] bg-slate-900 px-2 py-1.5 text-[var(--text)]" value={pageSize} onChange={(event) => { setPageSize(Number(event.target.value)); setPage(1) }}>
                 <option value={10}>10</option>
                 <option value={20}>20</option>
                 <option value={50}>50</option>
@@ -150,16 +150,16 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
         <div className="space-y-4">
           <div>
             <label htmlFor="thread-search" className="mb-1 block text-sm font-medium text-[var(--muted)]">キーワード検索</label>
-            <input id="thread-search" type="text" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="例: Alice バグ報告" className="w-full rounded-xl border border-[var(--line)] bg-white px-3 py-2.5 text-sm outline-none transition focus:border-cyan-600" />
+            <input id="thread-search" type="text" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder="例: Alice バグ報告" className="w-full rounded-xl border border-[var(--line)] bg-slate-900 px-3 py-2.5 text-sm text-[var(--text)] outline-none transition focus:border-cyan-400" />
             <p className="mt-1 text-xs text-[var(--muted)]/80">空白またはカンマ区切りで複数語を指定できます。</p>
           </div>
           <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--muted)]">
-            <div className="flex items-center gap-2 rounded-lg bg-slate-100/70 px-3 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-slate-900/70 px-3 py-2">
               <span className="font-medium">一致</span>
               <label className="flex items-center gap-1"><input type="radio" name="match-mode" checked={matchMode === 'any'} onChange={() => { setMatchMode('any'); setPage(1) }} />OR</label>
               <label className="flex items-center gap-1"><input type="radio" name="match-mode" checked={matchMode === 'all'} onChange={() => { setMatchMode('all'); setPage(1) }} />AND</label>
             </div>
-            <div className="flex flex-wrap items-center gap-3 rounded-lg bg-slate-100/70 px-3 py-2">
+            <div className="flex flex-wrap items-center gap-3 rounded-lg bg-slate-900/70 px-3 py-2">
               <span className="font-medium">対象</span>
               <label className="flex items-center gap-1"><input type="checkbox" checked={fields.subject} onChange={(event) => { setFields((prev) => ({ ...prev, subject: event.target.checked })); setPage(1) }} />件名</label>
               <label className="flex items-center gap-1"><input type="checkbox" checked={fields.author} onChange={(event) => { setFields((prev) => ({ ...prev, author: event.target.checked })); setPage(1) }} />投稿者</label>
@@ -187,7 +187,7 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
                   <div><dt className="font-medium">投稿日時</dt><dd>{formatDate(thread.createdAt)}</dd></div>
                   <div><dt className="font-medium">最終更新</dt><dd>{formatDate(thread.updatedAt)}</dd></div>
                 </dl>
-                <p className="mt-3 text-sm leading-6 text-slate-700">{toExcerpt(thread)}</p>
+                <p className="mt-3 text-sm leading-6 text-slate-300">{toExcerpt(thread)}</p>
               </li>
             ))}
           </ul>
@@ -195,8 +195,8 @@ export function ThreadListPage({ threads }: ThreadListPageProps) {
           <nav className="mt-6 flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--surface)]/90 px-4 py-3 shadow-sm">
             <p className="text-sm text-[var(--muted)]">{currentPage} / {totalPages} ページ</p>
             <div className="flex gap-2">
-              <button type="button" className="rounded-lg border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-[var(--text)] disabled:opacity-40" disabled={currentPage <= 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))}>前へ</button>
-              <button type="button" className="rounded-lg border border-[var(--line)] bg-white px-3 py-1.5 text-sm text-[var(--text)] disabled:opacity-40" disabled={currentPage >= totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}>次へ</button>
+              <button type="button" className="rounded-lg border border-[var(--line)] bg-slate-900 px-3 py-1.5 text-sm text-[var(--text)] disabled:opacity-40" disabled={currentPage <= 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))}>前へ</button>
+              <button type="button" className="rounded-lg border border-[var(--line)] bg-slate-900 px-3 py-1.5 text-sm text-[var(--text)] disabled:opacity-40" disabled={currentPage >= totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}>次へ</button>
             </div>
           </nav>
         </>

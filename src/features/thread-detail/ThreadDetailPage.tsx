@@ -55,11 +55,11 @@ export function ThreadDetailPage({ threads }: ThreadDetailPageProps) {
                 <p className="text-xs text-[var(--muted)]">{formatDate(post.date)}</p>
               </div>
               <p className="mb-3 text-sm font-medium text-[var(--muted)]">{post.subject || '(no subject)'}</p>
-              <p className="whitespace-pre-wrap text-sm leading-7 text-slate-800">{post.body}</p>
+              <p className="whitespace-pre-wrap text-sm leading-7 text-slate-300">{post.body}</p>
 
               <button
                 type="button"
-                className="mt-3 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-200"
+                className="mt-3 rounded-md bg-slate-800 px-2.5 py-1 text-xs font-medium text-slate-200 hover:bg-slate-700"
                 onClick={() => {
                   setShowMetaByPostId((prev) => ({ ...prev, [post.id]: !showMeta }))
                 }}
@@ -68,7 +68,7 @@ export function ThreadDetailPage({ threads }: ThreadDetailPageProps) {
               </button>
 
               {showMeta ? (
-                <dl className="mt-3 grid gap-2 rounded-xl border border-[var(--line)] bg-slate-50 p-3 text-xs text-slate-700 sm:grid-cols-2">
+                <dl className="mt-3 grid gap-2 rounded-xl border border-[var(--line)] bg-slate-900/70 p-3 text-xs text-slate-300 sm:grid-cols-2">
                   <div><dt className="font-semibold">EMAIL</dt><dd>{post.email || '-'}</dd></div>
                   <div><dt className="font-semibold">SITE</dt><dd>{post.site || '-'}</dd></div>
                   <div><dt className="font-semibold">USER AGENT</dt><dd>{post.userAgent || '-'}</dd></div>
