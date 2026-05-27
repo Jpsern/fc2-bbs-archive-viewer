@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+:root {
+  --bg-a: #f7f8fc;
+  --bg-b: #eef3ff;
+  --surface: #ffffff;
+  --line: #d6deee;
+  --text: #11203d;
+  --muted: #4d5d7b;
+  --accent: #0e7490;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(1200px 560px at -20% -20%, #dff4ff 0%, transparent 60%),
+    radial-gradient(900px 460px at 120% -10%, #e4eaff 0%, transparent 55%),
+    linear-gradient(160deg, var(--bg-a), var(--bg-b));
+  font-family: "Avenir Next", "Avenir", "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
